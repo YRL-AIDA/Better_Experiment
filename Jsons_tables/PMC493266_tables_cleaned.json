@@ -1,0 +1,943 @@
+[
+  {
+    "cells": [
+      {
+        "row_nums": [
+          0
+        ],
+        "column_nums": [
+          0
+        ],
+        "is_column_header": true,
+        "is_projected_row_header": false,
+        "xml_text_content": "Functional class"
+      },
+      {
+        "row_nums": [
+          0
+        ],
+        "column_nums": [
+          1
+        ],
+        "is_column_header": true,
+        "is_projected_row_header": false,
+        "xml_text_content": "\"GATC genes\""
+      },
+      {
+        "row_nums": [
+          0
+        ],
+        "column_nums": [
+          2
+        ],
+        "is_column_header": true,
+        "is_projected_row_header": false,
+        "xml_text_content": "all of E. coli 's genes"
+      },
+      {
+        "row_nums": [
+          0
+        ],
+        "column_nums": [
+          3
+        ],
+        "is_column_header": true,
+        "is_projected_row_header": false,
+        "xml_text_content": "\"EcoCyc genes\""
+      },
+      {
+        "row_nums": [
+          0
+        ],
+        "column_nums": [
+          4
+        ],
+        "is_column_header": true,
+        "is_projected_row_header": false,
+        "xml_text_content": "\"Mitomycin C genes\""
+      },
+      {
+        "row_nums": [
+          1
+        ],
+        "column_nums": [
+          0
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "Amino acid metabolism"
+      },
+      {
+        "row_nums": [
+          1
+        ],
+        "column_nums": [
+          1
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "2"
+      },
+      {
+        "row_nums": [
+          1
+        ],
+        "column_nums": [
+          2
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "134"
+      },
+      {
+        "row_nums": [
+          1
+        ],
+        "column_nums": [
+          3
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "0"
+      },
+      {
+        "row_nums": [
+          1
+        ],
+        "column_nums": [
+          4
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "5"
+      },
+      {
+        "row_nums": [
+          2
+        ],
+        "column_nums": [
+          0
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "Biosynthesis of cofactors, prosthetic groups, carriers"
+      },
+      {
+        "row_nums": [
+          2
+        ],
+        "column_nums": [
+          1
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "2"
+      },
+      {
+        "row_nums": [
+          2
+        ],
+        "column_nums": [
+          2
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "127"
+      },
+      {
+        "row_nums": [
+          2
+        ],
+        "column_nums": [
+          3
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "2"
+      },
+      {
+        "row_nums": [
+          2
+        ],
+        "column_nums": [
+          4
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "1"
+      },
+      {
+        "row_nums": [
+          3
+        ],
+        "column_nums": [
+          0
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "Cell envelope"
+      },
+      {
+        "row_nums": [
+          3
+        ],
+        "column_nums": [
+          1
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "2"
+      },
+      {
+        "row_nums": [
+          3
+        ],
+        "column_nums": [
+          2
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "194"
+      },
+      {
+        "row_nums": [
+          3
+        ],
+        "column_nums": [
+          3
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "5"
+      },
+      {
+        "row_nums": [
+          3
+        ],
+        "column_nums": [
+          4
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "10"
+      },
+      {
+        "row_nums": [
+          4
+        ],
+        "column_nums": [
+          0
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "Cellular process"
+      },
+      {
+        "row_nums": [
+          4
+        ],
+        "column_nums": [
+          1
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "1"
+      },
+      {
+        "row_nums": [
+          4
+        ],
+        "column_nums": [
+          2
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "102"
+      },
+      {
+        "row_nums": [
+          4
+        ],
+        "column_nums": [
+          3
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "18"
+      },
+      {
+        "row_nums": [
+          4
+        ],
+        "column_nums": [
+          4
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "14"
+      },
+      {
+        "row_nums": [
+          5
+        ],
+        "column_nums": [
+          0
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "Central intermediary metabolism"
+      },
+      {
+        "row_nums": [
+          5
+        ],
+        "column_nums": [
+          1
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "4"
+      },
+      {
+        "row_nums": [
+          5
+        ],
+        "column_nums": [
+          2
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "149"
+      },
+      {
+        "row_nums": [
+          5
+        ],
+        "column_nums": [
+          3
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "9"
+      },
+      {
+        "row_nums": [
+          5
+        ],
+        "column_nums": [
+          4
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "15"
+      },
+      {
+        "row_nums": [
+          6
+        ],
+        "column_nums": [
+          0
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "Energy metabolism"
+      },
+      {
+        "row_nums": [
+          6
+        ],
+        "column_nums": [
+          1
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "16"
+      },
+      {
+        "row_nums": [
+          6
+        ],
+        "column_nums": [
+          2
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "363"
+      },
+      {
+        "row_nums": [
+          6
+        ],
+        "column_nums": [
+          3
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "6"
+      },
+      {
+        "row_nums": [
+          6
+        ],
+        "column_nums": [
+          4
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "29"
+      },
+      {
+        "row_nums": [
+          7
+        ],
+        "column_nums": [
+          0
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "Fatty acid/Phospholipid metabolism"
+      },
+      {
+        "row_nums": [
+          7
+        ],
+        "column_nums": [
+          1
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "8"
+      },
+      {
+        "row_nums": [
+          7
+        ],
+        "column_nums": [
+          2
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "64"
+      },
+      {
+        "row_nums": [
+          7
+        ],
+        "column_nums": [
+          3
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "1"
+      },
+      {
+        "row_nums": [
+          7
+        ],
+        "column_nums": [
+          4
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "4"
+      },
+      {
+        "row_nums": [
+          8
+        ],
+        "column_nums": [
+          0
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "Hypothetical"
+      },
+      {
+        "row_nums": [
+          8
+        ],
+        "column_nums": [
+          1
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "11"
+      },
+      {
+        "row_nums": [
+          8
+        ],
+        "column_nums": [
+          2
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "1847"
+      },
+      {
+        "row_nums": [
+          8
+        ],
+        "column_nums": [
+          3
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "12"
+      },
+      {
+        "row_nums": [
+          8
+        ],
+        "column_nums": [
+          4
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "62"
+      },
+      {
+        "row_nums": [
+          9
+        ],
+        "column_nums": [
+          0
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "Nucleotide metabolism"
+      },
+      {
+        "row_nums": [
+          9
+        ],
+        "column_nums": [
+          1
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "11"
+      },
+      {
+        "row_nums": [
+          9
+        ],
+        "column_nums": [
+          2
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "120"
+      },
+      {
+        "row_nums": [
+          9
+        ],
+        "column_nums": [
+          3
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "2"
+      },
+      {
+        "row_nums": [
+          9
+        ],
+        "column_nums": [
+          4
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "14"
+      },
+      {
+        "row_nums": [
+          10
+        ],
+        "column_nums": [
+          0
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "Other categories"
+      },
+      {
+        "row_nums": [
+          10
+        ],
+        "column_nums": [
+          1
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "3"
+      },
+      {
+        "row_nums": [
+          10
+        ],
+        "column_nums": [
+          2
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "236"
+      },
+      {
+        "row_nums": [
+          10
+        ],
+        "column_nums": [
+          3
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "30"
+      },
+      {
+        "row_nums": [
+          10
+        ],
+        "column_nums": [
+          4
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "15"
+      },
+      {
+        "row_nums": [
+          11
+        ],
+        "column_nums": [
+          0
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "Regulatory functions"
+      },
+      {
+        "row_nums": [
+          11
+        ],
+        "column_nums": [
+          1
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "1"
+      },
+      {
+        "row_nums": [
+          11
+        ],
+        "column_nums": [
+          2
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "104"
+      },
+      {
+        "row_nums": [
+          11
+        ],
+        "column_nums": [
+          3
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "12"
+      },
+      {
+        "row_nums": [
+          11
+        ],
+        "column_nums": [
+          4
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "5"
+      },
+      {
+        "row_nums": [
+          12
+        ],
+        "column_nums": [
+          0
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "Replication"
+      },
+      {
+        "row_nums": [
+          12
+        ],
+        "column_nums": [
+          1
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "4"
+      },
+      {
+        "row_nums": [
+          12
+        ],
+        "column_nums": [
+          2
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "89"
+      },
+      {
+        "row_nums": [
+          12
+        ],
+        "column_nums": [
+          3
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "14"
+      },
+      {
+        "row_nums": [
+          12
+        ],
+        "column_nums": [
+          4
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "19"
+      },
+      {
+        "row_nums": [
+          13
+        ],
+        "column_nums": [
+          0
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "Transcription"
+      },
+      {
+        "row_nums": [
+          13
+        ],
+        "column_nums": [
+          1
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "1"
+      },
+      {
+        "row_nums": [
+          13
+        ],
+        "column_nums": [
+          2
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "47"
+      },
+      {
+        "row_nums": [
+          13
+        ],
+        "column_nums": [
+          3
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "5"
+      },
+      {
+        "row_nums": [
+          13
+        ],
+        "column_nums": [
+          4
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "7"
+      },
+      {
+        "row_nums": [
+          14
+        ],
+        "column_nums": [
+          0
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "Translation"
+      },
+      {
+        "row_nums": [
+          14
+        ],
+        "column_nums": [
+          1
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "0"
+      },
+      {
+        "row_nums": [
+          14
+        ],
+        "column_nums": [
+          2
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "150"
+      },
+      {
+        "row_nums": [
+          14
+        ],
+        "column_nums": [
+          3
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "2"
+      },
+      {
+        "row_nums": [
+          14
+        ],
+        "column_nums": [
+          4
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "61"
+      },
+      {
+        "row_nums": [
+          15
+        ],
+        "column_nums": [
+          0
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "Transport/binding protein"
+      },
+      {
+        "row_nums": [
+          15
+        ],
+        "column_nums": [
+          1
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "10"
+      },
+      {
+        "row_nums": [
+          15
+        ],
+        "column_nums": [
+          2
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "369"
+      },
+      {
+        "row_nums": [
+          15
+        ],
+        "column_nums": [
+          3
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "28"
+      },
+      {
+        "row_nums": [
+          15
+        ],
+        "column_nums": [
+          4
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "42"
+      },
+      {
+        "row_nums": [
+          16
+        ],
+        "column_nums": [
+          0
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "Total"
+      },
+      {
+        "row_nums": [
+          16
+        ],
+        "column_nums": [
+          1
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "76"
+      },
+      {
+        "row_nums": [
+          16
+        ],
+        "column_nums": [
+          2
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "4095"
+      },
+      {
+        "row_nums": [
+          16
+        ],
+        "column_nums": [
+          3
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "146"
+      },
+      {
+        "row_nums": [
+          16
+        ],
+        "column_nums": [
+          4
+        ],
+        "is_column_header": false,
+        "is_projected_row_header": false,
+        "xml_text_content": "303"
+      }
+    ],
+    "pmc_id": "PMC493266",
+    "structure_id": "PMC493266_table_0"
+  }
+]
