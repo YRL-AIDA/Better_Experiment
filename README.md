@@ -7,7 +7,7 @@
 - **data_collector.py** — сбор ответов LLM без немедленного анализа
 - **analyzer.py** — парсинг ответов и расчёт Precision, Recall, F1-score
 - Многомодельное тестирование (Gemma, Qwen, Llama, Mistral, DeepSeek и др.)
-- Четыре стратегии промптов: Zero-shot, Few-shot, Chain-of-Thought, Role Prompting
+- 13 стратегий промптов: Zero-shot, Few-shot, Chain-of-Thought, Role Prompting, Self-Consistency, Least-to-Most, Tree of Thoughts, ReAct, Self-Refine, Reflexion, OPRO, Chain-of-Table, Medprompt
 - Инкрементальное сохранение и Telegram-уведомления о прогрессе
 - Визуализация результатов (heatmap, bar charts)
 
@@ -55,13 +55,16 @@ Better_Experiment/
 JSON-таблицы должны содержать поля `data` (2D-массив ячеек) и `headers` (координаты заголовков `[{row, col}, ...]`).
 
 ```python
-from data_collector import ResponseCollector, MODELS, PROMPT_STRATEGIES
+from data_collector import ResponseCollector
+from prompts import PROMPTS
+from config import get_models
 
 collector = ResponseCollector(
     json_dir="Jsons_tables",
     output_dir="raw_responses"
 )
-collector.collect_responses(MODELS, PROMPT_STRATEGIES)
+models = get_models()  # Получить список моделей из config.py
+collector.collect_responses(models, PROMPTS)
 ```
 
 Результаты сохраняются в `raw_responses/`:
