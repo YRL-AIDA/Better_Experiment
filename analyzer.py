@@ -1,281 +1,304 @@
-PROMPTS = [
-    # 1. Zero-shot Prompting
-    {
-        "name": "zero_shot",
-        "system": [
-            "You are a data processing assistant.",
-            "Your task is to identify table headers and return their positions in JSON format."
-        ],
-        "user": """Analyze the following table and determine which cells are headers.
-Return your answer as JSON in this exact format:
-{{"headers": [{{"row": 0, "col": 0}}, {{"row": 0, "col": 1}}]}}
+import json
+import pandas as pd
+import numpy as np
+import re
+from typing import List, Dict, Any, Tuple
+from pathlib import Path
+import matplotlib.pyplot as plt
+import seaborn as sns
+from datetime import datetime
 
-Table:
-{table_text}"""
-    },
+class ResponseAnalyzer:
+    """Анализ собранных ответов"""
     
-    # 2. Few-shot Prompting
-    {
-        "name": "few_shot",
-        "system": [
-            "You are a table structure recognition expert.",
-            "You identify header cells and return their coordinates in JSON format."
-        ],
-        "user": """Your task is to identify table header cells.
-
-Example 1:
-Table:
-| ID | Name | Age |
-| 1 | Ivan | 25 |
-| 2 | Anna | 30 |
-Headers: {{"headers": [{{"row": 0, "col": 0}}, {{"row": 0, "col": 1}}, {{"row": 0, "col": 2}}]}}
-
-Example 2:
-Table:
-| Product | Price |
-| Category | Electronics |
-| Laptop | 1200 |
-Headers: {{"headers": [{{"row": 0, "col": 0}}, {{"row": 0, "col": 1}}]}}
-
-Now identify the headers for this table:
-{table_text}
-
-Return JSON format: {{"headers": [{{"row": X, "col": Y}}, ...]}}"""
-    },
+    def __init__(self, responses_file: str):
+        self.responses_file = responses_file
+        self.data = None
+        self.parsed_responses = []
+        self.metrics = []
+        
+    def load_data(self):
+        """Загрузка собранных ответов"""
+        with open(self.responses_file, 'r', encoding='utf-8') as f:
+            self.data = json.load(f)
+        print(f"Загружено {len(self.data['responses'])} ответов")
+        
+    def parse_response(self, text: str) -> List[Tuple[int, int]]:
+        """Парсинг ответа модели с множественными стратегиями"""
+        if not text:
+            return []
+        
+        strategies = [
+            self._parse_clean_json,
+            self._parse_json_with_markdown,
+            self._parse_coordinate_pairs,
+            self._parse_array_format,
+            self._parse_text_pattern
+        ]
+        
+        for strategy in strategies:
+            result = strategy(text)
+            if result is not None:
+                return result
+        
+        # Если ничего не сработало
+        return []
     
-    # 3. Role Prompting
-    {
-        "name": "role_prompting",
-        "system": [
-            "You are a leading data processing engineer with 20 years of experience in ETL processes.",
-            "You specialize in automatic recognition of complex table structures and noisy CSV files.",
-            "You excel at identifying headers even in non-standard table formats."
-        ],
-        "user": """As an expert in data structure analysis, examine this table and identify all header cells.
-Consider data types, semantic meaning, and structural patterns.
-
-Table:
-{table_text}
-
-Return your analysis as JSON: {{"headers": [{{"row": X, "col": Y}}, ...]}}"""
-    },
+    def _parse_clean_json(self, text: str) -> List[Tuple[int, int]]:
+        """Парсинг чистого JSON"""
+        try:
+            # Удаляем возможные пробелы и переносы
+            text = text.strip()
+            data = json.loads(text)
+            if "headers" in data:
+                return [(h['row'], h['col']) for h in data['headers'] 
+                        if isinstance(h, dict) and 'row' in h and 'col' in h]
+        except:
+            return None
     
-    # 4. Zero-Shot Chain-of-Thought
-    {
-        "name": "zero_shot_cot",
-        "system": [
-            "You are a systematic data analyst.",
-            "You solve problems step-by-step using logical reasoning."
-        ],
-        "user": """Identify the headers in this table. Let's think step by step:
-1. First, analyze the first row - what type of data does it contain?
-2. Then, compare it with the second row - are there differences in data types or semantic meaning?
-3. Check if any cells contain metadata or descriptive labels rather than data values.
-4. Based on this analysis, determine which cells are headers.
-
-Table:
-{table_text}
-
-Provide your step-by-step reasoning, then return the final answer as JSON: {{"headers": [{{"row": X, "col": Y}}, ...]}}"""
-    },
+    def _parse_json_with_markdown(self, text: str) -> List[Tuple[int, int]]:
+        """Парсинг JSON в markdown блоках"""
+        try:
+            # Ищем ```json ... ``` или ``` ... ```
+            pattern = r'```(?:json)?\s*(\{.*?\})\s*```'
+            match = re.search(pattern, text, re.DOTALL)
+            if match:
+                data = json.loads(match.group(1))
+                if "headers" in data:
+                    return [(h['row'], h['col']) for h in data['headers'] 
+                            if isinstance(h, dict) and 'row' in h and 'col' in h]
+        except:
+            return None
     
-    # 5. Self-Consistency
-    {
-        "name": "self_consistency",
-        "system": [
-            "You are a table structure analyst.",
-            "You generate multiple hypotheses and select the most consistent answer."
-        ],
-        "user": """Generate 3 different interpretations of where the headers are in this table:
-- Interpretation 1: Headers in the first row
-- Interpretation 2: Headers in multiple rows
-- Interpretation 3: Headers might be in a non-standard position
-
-After analyzing all interpretations, choose the most logical and consistent option.
-
-Table:
-{table_text}
-
-Provide your reasoning for each interpretation, then return the final answer as JSON: {{"headers": [{{"row": X, "col": Y}}, ...]}}"""
-    },
+    def _parse_coordinate_pairs(self, text: str) -> List[Tuple[int, int]]:
+        """Парсинг паттернов типа row: 0, col: 1"""
+        try:
+            pattern = r'["\']?row["\']?\s*:\s*(\d+)[,\s]+["\']?col["\']?\s*:\s*(\d+)'
+            matches = re.findall(pattern, text, re.IGNORECASE)
+            if matches:
+                return [(int(r), int(c)) for r, c in matches]
+        except:
+            return None
     
-    # 6. Least-to-Most Prompting
-    {
-        "name": "least_to_most",
-        "system": [
-            "You are a methodical data analyst.",
-            "You solve complex problems by breaking them into simple subtasks."
-        ],
-        "user": """Solve this task step by step from simple to complex:
-
-Step 1: List the data type of each column in the first 3 rows.
-Step 2: Identify which rows contain descriptive labels vs actual data values.
-Step 3: Determine if the first row differs in format or semantic meaning from subsequent rows.
-Step 4: Based on steps 1-3, identify the final header cell positions.
-
-Table:
-{table_text}
-
-Show your work for each step, then return final answer as JSON: {{"headers": [{{"row": X, "col": Y}}, ...]}}"""
-    },
+    def _parse_array_format(self, text: str) -> List[Tuple[int, int]]:
+        """Парсинг формата [[0,1], [0,2]]"""
+        try:
+            pattern = r'\[(\d+),\s*(\d+)\]'
+            matches = re.findall(pattern, text)
+            if matches:
+                return [(int(r), int(c)) for r, c in matches]
+        except:
+            return None
     
-    # 7. Tree of Thoughts
-    {
-        "name": "tree_of_thoughts",
-        "system": [
-            "You are a multi-perspective table analyst.",
-            "You evaluate different expert opinions to reach the best conclusion."
-        ],
-        "user": """Analyze this table from three expert perspectives:
-
-Expert A: "Headers are in the first row only"
-Expert B: "There are no explicit headers, they need to be inferred"
-Expert C: "Headers span multiple rows (multi-level structure)"
-
-For each expert:
-1. Present their argument
-2. Evaluate validity based on the actual table data
-3. Identify strengths and weaknesses
-
-Finally, make a verdict on which interpretation is correct.
-
-Table:
-{table_text}
-
-Show the analysis for each expert, then return the final answer as JSON: {{"headers": [{{"row": X, "col": Y}}, ...]}}"""
-    },
+    def _parse_text_pattern(self, text: str) -> List[Tuple[int, int]]:
+        """Парсинг текстовых описаний типа (0,1)"""
+        try:
+            pattern = r'\((\d+),\s*(\d+)\)'
+            matches = re.findall(pattern, text)
+            if matches:
+                return [(int(r), int(c)) for r, c in matches]
+        except:
+            return None
     
-    # 8. ReAct (Reason + Act)
-    {
-        "name": "react",
-        "system": [
-            "You are an analytical agent that combines reasoning with verification actions.",
-            "You use Thought-Action-Observation cycles to solve problems."
-        ],
-        "user": """Use the Thought-Action-Observation loop to identify headers:
-
-Thought 1: What does the structure suggest about header location?
-Action 1: Examine data types in each column of row 0 vs row 1
-Observation 1: [Record findings]
-
-Thought 2: Are there semantic clues indicating header cells?
-Action 2: Check for descriptive text vs numeric/categorical data
-Observation 2: [Record findings]
-
-Thought 3: Based on observations, where are the headers?
-Action 3: Compile final header positions
-
-Table:
-{table_text}
-
-Show your complete reasoning loop, then return JSON: {{"headers": [{{"row": X, "col": Y}}, ...]}}"""
-    },
+    def calculate_metrics(self, pred: List[Tuple], true: List[Tuple]) -> Dict:
+        """Расчет метрик"""
+        set_p, set_t = set(pred), set(true)
+        
+        tp = len(set_p & set_t)
+        fp = len(set_p - set_t)
+        fn = len(set_t - set_p)
+        tn = 0  # Для таблиц сложно определить истинно негативные
+        
+        precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0
+        recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
+        f1 = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0.0
+        accuracy = tp / (tp + fp + fn) if (tp + fp + fn) > 0 else 0.0
+        
+        return {
+            "precision": round(precision, 4),
+            "recall": round(recall, 4),
+            "f1": round(f1, 4),
+            "accuracy": round(accuracy, 4),
+            "tp": tp,
+            "fp": fp,
+            "fn": fn,
+            "pred_count": len(pred),
+            "true_count": len(true)
+        }
     
-    # 9. Self-Refine
-    {
-        "name": "self_refine",
-        "system": [
-            "You are a self-critical data analyst.",
-            "You create drafts, critique them, and refine your answers iteratively."
-        ],
-        "user": """Work through this iterative refinement process:
-
-DRAFT (Step 1): Make your initial identification of header cells.
-
-CRITIQUE (Step 2): Review your draft answer:
-- Did you include any regular data cells as headers by mistake?
-- Did you miss any multi-row or multi-level headers?
-- Are there edge cases or unusual patterns you overlooked?
-
-REFINED ANSWER (Step 3): Based on your self-critique, provide an improved, corrected answer.
-
-Table:
-{table_text}
-
-Show all three steps clearly, then return final JSON: {{"headers": [{{"row": X, "col": Y}}, ...]}}"""
-    },
+    def analyze_parse_success(self) -> Dict:
+        """Анализ успешности парсинга ответов"""
+        parse_stats = {
+            "total": len(self.data['responses']),
+            "successfully_parsed": 0,
+            "empty_responses": 0,
+            "parse_failures": 0,
+            "by_model": {},
+            "by_strategy": {}
+        }
+        
+        for resp in self.data['responses']:
+            raw = resp['raw_response']
+            parsed = self.parse_response(raw)
+            
+            model = resp['model']
+            strategy = resp['prompt_strategy']
+            
+            # Инициализация счетчиков
+            if model not in parse_stats["by_model"]:
+                parse_stats["by_model"][model] = {"success": 0, "fail": 0, "empty": 0}
+            if strategy not in parse_stats["by_strategy"]:
+                parse_stats["by_strategy"][strategy] = {"success": 0, "fail": 0, "empty": 0}
+            
+            if not raw or raw.strip() == "":
+                parse_stats["empty_responses"] += 1
+                parse_stats["by_model"][model]["empty"] += 1
+                parse_stats["by_strategy"][strategy]["empty"] += 1
+            elif len(parsed) > 0:
+                parse_stats["successfully_parsed"] += 1
+                parse_stats["by_model"][model]["success"] += 1
+                parse_stats["by_strategy"][strategy]["success"] += 1
+            else:
+                parse_stats["parse_failures"] += 1
+                parse_stats["by_model"][model]["fail"] += 1
+                parse_stats["by_strategy"][strategy]["fail"] += 1
+        
+        return parse_stats
     
-    # 10. Reflexion
-    {
-        "name": "reflexion",
-        "system": [
-            "You are an experienced table analyst with memory of past mistakes.",
-            "You learn from previous errors to improve current performance."
-        ],
-        "user": """Important lessons from past errors:
-- Don't mistake the first row of data for headers just because it contains text
-- Check if numeric-looking cells might actually be header labels (e.g., "2023", "Q1")
-- Multi-row headers are common - don't assume only one row can be headers
-- Empty cells in the first row might indicate merged header cells
-
-Given these lessons, carefully analyze this table and identify the actual headers:
-
-Table:
-{table_text}
-
-Explain how you avoided past mistakes, then return JSON: {{"headers": [{{"row": X, "col": Y}}, ...]}}"""
-    },
+    def process_all_responses(self):
+        """Обработка всех ответов и расчет метрик"""
+        for resp in self.data['responses']:
+            parsed = self.parse_response(resp['raw_response'])
+            true = [tuple(h) for h in resp['true_headers']]
+            
+            metrics = self.calculate_metrics(parsed, true)
+            
+            self.metrics.append({
+                **resp,
+                "parsed_headers": parsed,
+                "parsed_count": len(parsed),
+                "parse_success": len(parsed) > 0,
+                **metrics
+            })
+        
+        print(f"Обработано {len(self.metrics)} ответов")
     
-    # 11. OPRO (Optimization by Prompting)
-    {
-        "name": "opro",
-        "system": [
-            "You are a highly accurate table structure recognition system.",
-            "Data integrity depends on your precise header identification."
-        ],
-        "user": """Take a deep breath and work on this task step by step.
-
-Your goal is to identify table headers with maximum accuracy to ensure data integrity.
-This is critical for the project's success.
-
-Carefully examine each cell's content, position, and relationship to other cells.
-Consider all possibilities before making your final determination.
-
-Table:
-{table_text}
-
-Work methodically and return your answer as JSON: {{"headers": [{{"row": X, "col": Y}}, ...]}}"""
-    },
+    def generate_summary_statistics(self) -> pd.DataFrame:
+        """Генерация сводной статистики"""
+        df = pd.DataFrame(self.metrics)
+        
+        # Группировка по моделям
+        model_stats = df.groupby('model').agg({
+            'f1': ['mean', 'std', 'min', 'max', 'median'],
+            'precision': ['mean', 'std'],
+            'recall': ['mean', 'std'],
+            'accuracy': 'mean',
+            'parse_success': 'mean',
+            'duration_sec': ['mean', 'sum'],
+        }).round(4)
+        
+        # Группировка по стратегиям промптов
+        strategy_stats = df.groupby('prompt_strategy').agg({
+            'f1': ['mean', 'std', 'median'],
+            'precision': 'mean',
+            'recall': 'mean',
+            'parse_success': 'mean'
+        }).round(4)
+        
+        # Топ комбинации модель+стратегия
+        combo_stats = df.groupby(['model', 'prompt_strategy']).agg({
+            'f1': 'mean',
+            'precision': 'mean',
+            'recall': 'mean',
+            'parse_success': 'mean'
+        }).round(4).sort_values('f1', ascending=False)
+        
+        return {
+            'by_model': model_stats,
+            'by_strategy': strategy_stats,
+            'by_combination': combo_stats.head(20)
+        }
     
-    # 12. Chain-of-Table
-    {
-        "name": "chain_of_table",
-        "system": [
-            "You are a table operations specialist.",
-            "You use sequential table operations to analyze structure."
-        ],
-        "user": """Perform these table operations sequentially:
-
-Operation 1 - SELECT_ROWS(0, 1, 2): Extract first 3 rows
-Operation 2 - ANALYZE_TYPES: Check data types in each column for these rows
-Operation 3 - COMPARE_SEMANTIC: Compare semantic meaning of row 0 vs rows 1-2
-Operation 4 - IDENTIFY_PATTERNS: Look for header-indicating patterns (capitalization, naming conventions, etc.)
-Operation 5 - GET_HEADERS: Based on operations 1-4, extract header cell positions
-
-Table:
-{table_text}
-
-Execute each operation and show results, then return JSON: {{"headers": [{{"row": X, "col": Y}}, ...]}}"""
-    },
+    def create_visualizations(self, output_dir: str = "analysis_results"):
+        """Создание визуализаций"""
+        Path(output_dir).mkdir(exist_ok=True)
+        df = pd.DataFrame(self.metrics)
+        
+        # 1. F1 Score по моделям
+        plt.figure(figsize=(14, 6))
+        model_f1 = df.groupby('model')['f1'].mean().sort_values(ascending=False)
+        plt.barh(range(len(model_f1)), model_f1.values)
+        plt.yticks(range(len(model_f1)), model_f1.index)
+        plt.xlabel('Average F1 Score')
+        plt.title('Model Performance Comparison')
+        plt.tight_layout()
+        plt.savefig(f"{output_dir}/f1_by_model.png", dpi=300)
+        plt.close()
+        
+        # 2. Success rate парсинга
+        plt.figure(figsize=(10, 6))
+        parse_success = df.groupby('model')['parse_success'].mean().sort_values(ascending=False)
+        plt.bar(range(len(parse_success)), parse_success.values)
+        plt.xticks(range(len(parse_success)), parse_success.index, rotation=45, ha='right')
+        plt.ylabel('Parse Success Rate')
+        plt.title('Response Parsing Success Rate by Model')
+        plt.tight_layout()
+        plt.savefig(f"{output_dir}/parse_success_by_model.png", dpi=300)
+        plt.close()
+        
+        # 3. Heatmap стратегий и моделей
+        pivot = df.pivot_table(values='f1', index='model', columns='prompt_strategy', aggfunc='mean')
+        plt.figure(figsize=(10, 8))
+        sns.heatmap(pivot, annot=True, fmt='.3f', cmap='YlGnBu')
+        plt.title('F1 Score: Model × Prompt Strategy')
+        plt.tight_layout()
+        plt.savefig(f"{output_dir}/heatmap_model_strategy.png", dpi=300)
+        plt.close()
+        
+        print(f"Визуализации сохранены в {output_dir}")
     
-    # 13. Medprompt Style (Composite)
-    {
-        "name": "medprompt",
-        "system": [
-            "You are an ensemble table analysis system.",
-            "You combine multiple reasoning strategies and select the best answer by consensus."
-        ],
-        "user": """Use a composite analysis approach:
+    def save_analysis_results(self, output_dir: str = "analysis_results"):
+        """Сохранение результатов анализа"""
+        Path(output_dir).mkdir(exist_ok=True)
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        
+        # 1. Детальные метрики
+        df = pd.DataFrame(self.metrics)
+        df.to_excel(f"{output_dir}/detailed_metrics_{timestamp}.xlsx", index=False)
+        df.to_csv(f"{output_dir}/detailed_metrics_{timestamp}.csv", index=False)
+        
+        # 2. Сводная статистика
+        summary = self.generate_summary_statistics()
+        with pd.ExcelWriter(f"{output_dir}/summary_statistics_{timestamp}.xlsx") as writer:
+            summary['by_model'].to_excel(writer, sheet_name='By Model')
+            summary['by_strategy'].to_excel(writer, sheet_name='By Strategy')
+            summary['by_combination'].to_excel(writer, sheet_name='Top Combinations')
+        
+        # 3. Статистика парсинга
+        parse_stats = self.analyze_parse_success()
+        with open(f"{output_dir}/parse_statistics_{timestamp}.json", 'w', encoding='utf-8') as f:
+            json.dump(parse_stats, f, indent=2, ensure_ascii=False)
+        
+        print(f"Результаты анализа сохранены в {output_dir}")
+        
+        # Вывод краткой статистики
+        print("\n=== КРАТКАЯ СТАТИСТИКА ===")
+        print(f"Всего проанализировано: {len(self.metrics)} ответов")
+        print(f"Успешно распарсено: {sum(1 for m in self.metrics if m['parse_success'])} ({sum(1 for m in self.metrics if m['parse_success'])/len(self.metrics)*100:.1f}%)")
+        print(f"\nСредние метрики:")
+        print(f"  F1 Score: {df['f1'].mean():.4f} ± {df['f1'].std():.4f}")
+        print(f"  Precision: {df['precision'].mean():.4f}")
+        print(f"  Recall: {df['recall'].mean():.4f}")
+        print(f"\nЛучшая модель по F1: {summary['by_model']['f1']['mean'].idxmax()} ({summary['by_model']['f1']['mean'].max():.4f})")
+        print(f"Лучшая стратегия: {summary['by_strategy']['f1']['mean'].idxmax()} ({summary['by_strategy']['f1']['mean'].max():.4f})")
 
-1. RETRIEVE: Recall similar table structures from your training knowledge
-2. REASON: Generate chain-of-thought analysis for this specific table
-3. GENERATE: Create 3 different header identification hypotheses
-4. ENSEMBLE: Compare all hypotheses and select the answer with highest confidence
-5. VALIDATE: Verify the selected answer against table structure rules
 
-Table:
-{table_text}
-
-Show your work for each phase, then return consensus answer as JSON: {{"headers": [{{"row": X, "col": Y}}, ...]}}"""
-    }
-]
+if __name__ == "__main__":
+    # Укажите путь к файлу с ответами
+    responses_file = "raw_responses/responses_20250201_143022.json"  # Замените на актуальный
+    
+    analyzer = ResponseAnalyzer(responses_file)
+    analyzer.load_data()
+    analyzer.process_all_responses()
+    analyzer.save_analysis_results()
+    analyzer.create_visualizations()
