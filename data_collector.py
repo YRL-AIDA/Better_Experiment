@@ -11,10 +11,14 @@ from datetime import datetime
 
 load_dotenv()
 
-TELEGRAM_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "7469980805:AAGN6ObqM1SMY6S-oy4QPVGVlp8Zc9qM9Kg")
-TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "534239907")
+# Секреты загружаются из .env (файл в .gitignore)
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "")
+
 
 def telegram_log(message: str):
+    if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
+        return
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
     try:
         requests.post(url, data={"chat_id": TELEGRAM_CHAT_ID, "text": message})
@@ -30,9 +34,14 @@ class ResponseCollector:
         self.output_dir = output_dir
         os.makedirs(output_dir, exist_ok=True)
         
+        api_key = os.getenv("BOTHUB_API_KEY", "")
+        if not api_key:
+            raise ValueError(
+                "BOTHUB_API_KEY не задан. Создайте файл .env и укажите BOTHUB_API_KEY=your_key"
+            )
         self.client = OpenAI(
             base_url="https://api.bothub.chat/v1",
-            api_key=os.getenv("BOTHUB_API_KEY", "YOUR_BOTHUB_API_KEY")
+            api_key=api_key
         )
         
         logging.basicConfig(

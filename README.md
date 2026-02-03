@@ -21,7 +21,10 @@ pip install -r requirements.txt
 
 ## Настройка окружения
 
-Создайте файл `.env` в корне проекта:
+Все ключи и секреты хранятся только в файле `.env` (он в `.gitignore` и не попадает в репозиторий).
+
+1. Скопируйте пример: `cp .env.example .env` (или создайте `.env` вручную).
+2. Заполните переменные в `.env`:
 
 ```
 BOTHUB_API_KEY=your_bothub_api_key
@@ -29,12 +32,15 @@ TELEGRAM_BOT_TOKEN=your_telegram_bot_token
 TELEGRAM_CHAT_ID=your_chat_id
 ```
 
+`BOTHUB_API_KEY` обязателен для сбора ответов. Telegram — опционально (уведомления о прогрессе).
+
 ## Структура проекта
 
 ```
 Better_Experiment/
 ├── data_collector.py    # Сбор ответов моделей через Bothub API
 ├── analyzer.py          # Анализ ответов и расчёт метрик
+├── .env.example         # Пример переменных окружения (скопировать в .env)
 ├── Jsons_tables/        # JSON-таблицы для тестирования
 │   ├── PMC493266_tables_cleaned.json
 │   └── PMC493271_tables_cleaned.json

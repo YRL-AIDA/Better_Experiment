@@ -1,7 +1,10 @@
-# Environment variables
+# Environment variables and secrets (never commit)
 .env
 .env.local
 .env.*.local
+secrets.env
+*.secrets
+config.secret
 
 # Python
 __pycache__/
